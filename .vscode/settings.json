@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/64309dfd-1971-4502-8ec6-8b83bb84a5a4/AppServices/subscriptions/64309dfd-1971-4502-8ec6-8b83bb84a5a4/resourceGroups/PrakarshOrderIDs_group/providers/Microsoft.Web/sites/PrakarshOrderIDs",
+  "appService.deploySubpath": "."
+}

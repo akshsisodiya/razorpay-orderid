@@ -22,8 +22,9 @@ var instance = new Razorpay({
 });
 
 app.get("/order-id", async (req, res) => {
+  let cart = await JSON.parse(req.body)
   var options = {
-    amount: req.body.total,
+    amount: cart.total,
     currency: "INR",
     receipt: uniquId(),
   };
