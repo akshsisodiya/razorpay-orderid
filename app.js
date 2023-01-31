@@ -26,7 +26,13 @@ app.get("/", async(req, res)=>{
 })
 
 app.post("/order-id", async (req, res) => {
-  let cart = await JSON.parse(req.body)
+  let cart
+  try{
+    cart = await JSON.parse(req.body)
+  } catch(e){
+    cart = req.body
+  }
+  
   var options = {
     amount: cart.total,
     currency: "INR",
