@@ -5,14 +5,20 @@ var logger = require("morgan");
 const Razorpay = require("razorpay");
 const uniquId = require("uniquid");
 require("dotenv").config();
+const cors = require('cors');
+const bodyParser = require('body-parser')
 
 var app = express();
 
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(logger("dev"));
+// app.use(cookieParser());
+// app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cors({
+    origin: '*',
+}))
 
 let orderId;
 
@@ -25,13 +31,15 @@ app.get("/", async(req, res)=>{
   res.send("Hello")
 })
 
+
 app.post("/order-id", async (req, res) => {
   let cart
   try{
-    cart = await JSON.parse(req.body)
+    cart = await JSON.parse(req['body'])
   } catch(e){
     cart = req.body
   }
+  console.log(cart.total)
   
   var options = {
     amount: cart.total,
@@ -41,9 +49,11 @@ app.post("/order-id", async (req, res) => {
 
   instance.orders.create(options, function (err, order) {
     if (err) {
+      console.log(err)
       res.status(400).json(err);
     } else {
       orderId = order.id;
+      console.log(orderId)
       res.status(200).json({ order_id: orderId });
     }
   });
