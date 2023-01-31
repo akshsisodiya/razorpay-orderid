@@ -21,7 +21,11 @@ var instance = new Razorpay({
   key_secret: process.env.RAZORPAY_SECRET,
 });
 
-app.get("/order-id", async (req, res) => {
+app.get("/", async(req, res)=>{
+  res.send("Hello")
+})
+
+app.post("/order-id", async (req, res) => {
   let cart = await JSON.parse(req.body)
   var options = {
     amount: cart.total,
