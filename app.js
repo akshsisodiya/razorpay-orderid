@@ -9,16 +9,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 
 var app = express();
-
+app.use(cors({
+  origin: '*',
+}))
 // app.use(logger("dev"));
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use(cors({
-    origin: '*',
-}))
+
 
 let orderId;
 
@@ -39,7 +39,7 @@ app.post("/order-id", async (req, res) => {
   } catch(e){
     cart = req['body']
   }
-  console.log(cart)
+  console.log(cart.total)
   
   var options = {
     amount: cart.total,
@@ -50,7 +50,7 @@ app.post("/order-id", async (req, res) => {
   instance.orders.create(options, function (err, order) {
     if (err) {
       console.log(err)
-      res.status(400).json(err);
+      res.status(400).json({message: "here it went wrong", err:""});
     } else {
       orderId = order.id;
       console.log(orderId)
