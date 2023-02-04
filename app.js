@@ -37,9 +37,9 @@ app.post("/order-id", async (req, res) => {
   try{
     cart = await JSON.parse(req['body'])
   } catch(e){
-    cart = req.body
+    cart = req['body']
   }
-  console.log(cart.total)
+  console.log(cart)
   
   var options = {
     amount: cart.total,
