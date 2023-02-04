@@ -42,7 +42,7 @@ app.post("/order-id", async (req, res) => {
   console.log(cart.total)
   
   var options = {
-    amount: cart.total,
+    amount: cart.total*100,
     currency: "INR",
     receipt: uniquId(),
   };
