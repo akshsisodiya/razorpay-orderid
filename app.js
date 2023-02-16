@@ -7,7 +7,8 @@ const uniquId = require("uniquid");
 require("dotenv").config();
 const cors = require('cors');
 const bodyParser = require('body-parser')
-const { createClient } =  
+const paymentConfirmedController = require('./controllers/paymentConfirmedController')
+
 
 var app = express();
 app.use(cors({
@@ -60,9 +61,7 @@ app.post("/order-id", async (req, res) => {
   });
 });
 
-app.post("/payment-callback", async(req, res)=>{
-
-})
+app.post("/payment-callback", paymentConfirmedController)
 
 var listener = app.listen(8080, function () {
   console.log("Listening on port " + listener.address().port);
