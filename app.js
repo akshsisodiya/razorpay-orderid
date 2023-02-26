@@ -2,12 +2,11 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const Razorpay = require("razorpay");
-const uniquId = require("uniquid");
 require("dotenv").config();
 const cors = require('cors');
 const bodyParser = require('body-parser')
 const paymentConfirmedController = require('./controllers/paymentConfirmedController')
+const orderIdController =  require('./controllers/orderIdController')
 
 
 var app = express();
@@ -22,44 +21,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 
-let orderId;
 
-var instance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY,
-  key_secret: process.env.RAZORPAY_SECRET,
-});
 
 app.get("/", async(req, res)=>{
   res.send("Hello")
 })
 
 
-app.post("/order-id", async (req, res) => {
-  let cart
-  try{
-    cart = await JSON.parse(req['body'])
-  } catch(e){
-    cart = req['body']
-  }
-  console.log(cart.total)
-  
-  var options = {
-    amount: cart.total*100,
-    currency: "INR",
-    receipt: uniquId(),
-  };
-
-  instance.orders.create(options, function (err, order) {
-    if (err) {
-      console.log(err)
-      res.status(400).json({message: "here it went wrong", err:""});
-    } else {
-      orderId = order.id;
-      console.log(orderId)
-      res.status(200).json({ order_id: orderId });
-    }
-  });
-});
+app.post("/order-id", orderIdController);
 
 app.post("/payment-callback", paymentConfirmedController)
 

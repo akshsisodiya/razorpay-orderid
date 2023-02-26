@@ -19,27 +19,30 @@ async function paymentConfirmedController(req, res){
                 }
                 const {data:orderData, error:orderError} = await supabase.from('Orders').select('*').eq('order_id', info.order_id)
                 try{
-                    let orders = orderData[0]
-                    let sales = await orders.map(async ({rid, coupon, order_id, uid})=>{
-                        let {data: rdata, error: rerror} = supabase.from('Registrations').update({paid: true}).eq('rid', rid)
+                    // let orders = orderData[0]
+                    // let sales = await orders.map(async ({rid, coupon, order_id, uid})=>{
+                    //     let {data: rdata, error: rerror} = supabase.from('Registrations').update({paid: true}).eq('rid', rid)
                         
-                        return {
-                            uid: uid,
-                            rid: rid,
-                            coupon: coupon,
-                            order_id: order_id,
-                        }
-                    })
-                    let {data: salesData, error: salesError} = await supabase.from('Sales').insert(sales).select('*')
-                    res.send('payment ok')
+                    //     return {
+                    //         uid: uid,
+                    //         rid: rid,
+                    //         coupon: coupon,
+                    //         order_id: order_id,
+                    //     }
+                    // })
+                    // let {data: salesData, error: salesError} = await supabase.from('Sales').insert(sales).select('*')
+                    console.log('payment recieved')
+                    res.status(200).send('ok')
                 } catch(e){
                     res.send('OOPS!! We forgot to store payment information, PAY AGAIN')
                 }
-            }
+            } 
         } else {
             res.send('ERROR')
         }
     })
+
+    res.send('something wemt wrong')
 }
 
 module.exports = paymentConfirmedController

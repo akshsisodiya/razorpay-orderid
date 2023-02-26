@@ -16,6 +16,7 @@
     "express": "~4.16.1",
     "formidable": "^2.1.1",
     "morgan": "~1.9.1",
+    "pg": "^8.9.0",
     "razorpay": "^2.8.4",
     "supabase": "^1.38.2",
     "uniquid": "^1.1.4"
