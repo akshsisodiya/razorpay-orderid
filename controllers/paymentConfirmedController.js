@@ -1,48 +1,30 @@
 const supabase = require('../lib/client')
 const Formidable = require('formidable')
 const crypto = require('crypto')
+require('dotenv').config()
+const Razorpay = require("razorpay");
+
+
+var instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY,
+    key_secret: process.env.RAZORPAY_SECRET,
+  });
 
 async function paymentConfirmedController(req, res){
-    const form = Formidable()
-    form.parse(req, async (err, fields, files)=>{
-        if(fields){
-            console.log(fields)
-            const hash = crypto
-                .createHmac('sha256', process.env.RAZORPAY_SECRET)
-                .update(orderId+'|'+fields.razorpay_payment_id)
-                .digest('hex')
+    let x = await instance.payments.fetch(req.body.razorpay_payment_id)
+    console.log(x)
+    let body=req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
 
-            if(fields.razorpay_signature === hash){
-                const info ={
-                    payment_id: fields.razorpay_payment_id,
-                    order_id: fields.razorpay_order_id
-                }
-                const {data:orderData, error:orderError} = await supabase.from('Orders').select('*').eq('order_id', info.order_id)
-                try{
-                    // let orders = orderData[0]
-                    // let sales = await orders.map(async ({rid, coupon, order_id, uid})=>{
-                    //     let {data: rdata, error: rerror} = supabase.from('Registrations').update({paid: true}).eq('rid', rid)
-                        
-                    //     return {
-                    //         uid: uid,
-                    //         rid: rid,
-                    //         coupon: coupon,
-                    //         order_id: order_id,
-                    //     }
-                    // })
-                    // let {data: salesData, error: salesError} = await supabase.from('Sales').insert(sales).select('*')
-                    console.log('payment recieved')
-                    res.status(200).send('ok')
-                } catch(e){
-                    res.send('OOPS!! We forgot to store payment information, PAY AGAIN')
-                }
-            } 
-        } else {
-            res.send('ERROR')
-        }
-    })
-
-    res.send('something wemt wrong')
+  var crypto = require("crypto");
+  var expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET)
+                                  .update(body.toString())
+                                  .digest('hex');
+                                  console.log("sig received " ,req.body.razorpay_signature);
+                                  console.log("sig generated " ,expectedSignature);
+  var response = {"signatureIsValid":"false"}
+  if(expectedSignature === req.body.razorpay_signature)
+   response={"signatureIsValid":"true"}
+      res.send(response);
 }
 
 module.exports = paymentConfirmedController

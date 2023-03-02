@@ -9,14 +9,4 @@ const client = new Client({
     password: process.env.DB_PASS,
 })
 
-client.connect()
-
-client.query(`select * from auth.users`, (err, res)=>{
-    if(!err){
-        console.log(res.rows)
-    } else {
-        console.log(err.message)
-    }
-
-    client.end()
-})
+module.exports = client
