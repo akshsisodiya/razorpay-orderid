@@ -1,6 +1,6 @@
 const uniquId = require("uniquid");
 const Razorpay = require("razorpay");
-const client  = require("../databasepg.js")
+// const client  = require("../databasepg.js")
 const supabase = require("../lib/client.js")
 let orderId;
 

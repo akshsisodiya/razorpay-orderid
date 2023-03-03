@@ -1,4 +1,4 @@
-const supabase = require('../lib/client')
+// const supabase = require('../lib/client')
 const Formidable = require('formidable')
 const crypto = require('crypto')
 require('dotenv').config()
